@@ -6,16 +6,23 @@
 ## 🛠 Simulink Architecture
 
 ### Cascaded PID Control System
-```
-Outer Loop (Tilt Regulation - Slow)
-├── MPU6050 IMU → Kalman Filter → PID Controller
-├── Error: Setpoint(0°) - Filtered Tilt Angle
-└── Output: Desired Wheel Speed Reference
 
-Inner Loop (Wheel Speed Tracking - Fast)  
-├── Wheel Encoder (HC-020K) → PID Controller → Motor PWM
-├── Error: Reference RPM - Actual RPM  
-└── Output: TB6600 Stepper Driver Signal
+**Outer Loop (Tilt Regulation - Slow)**
+```
+MPU6050 IMU → Kalman Filter → PID Controller
+     ↓
+Error: Setpoint(0°) - Filtered Tilt Angle
+     ↓
+Output: Desired Wheel Speed Reference
+```
+
+**Inner Loop (Wheel Speed Tracking - Fast)**
+```
+Wheel Encoder (HC-020K) → PID Controller → Motor PWM
+         ↓
+Error: Reference RPM - Actual RPM
+         ↓
+Output: TB6600 Stepper Driver Signal
 ```
 
 ### Key Simulink Features
@@ -26,12 +33,12 @@ Inner Loop (Wheel Speed Tracking - Fast)
 
 ## 📊 Simulation Results
 
-| Metric | Target | Achieved |
-|--------|--------|----------|
-| Settling Time | <3s | **1.8s** |
-| Overshoot | <10% | **4.2%** |
-| Rise Time | <1s | **0.6s** |
-| Steady-State Error | <2° | **0.8°** |
+| Metric             | Target | Achieved |
+|--------------------|--------|----------|
+| Settling Time      | <3s    | **1.8s** |
+| Overshoot          | <10%   | **4.2%** |
+| Rise Time          | <1s    | **0.6s** |
+| Steady-State Error | <2°    | **0.8°** |
 
 ## 🚀 Run Simulations
 
@@ -49,6 +56,7 @@ plot(simout.time, simout.signals.values)
 ```
 
 ## 📁 Simulink Files
+
 ```
 simulink/
 ├── cascaded_pid.slx          # Main control system
@@ -58,6 +66,7 @@ simulink/
 ```
 
 ## 🔧 PID Tuning Process
+
 ```
 1. Initial Gains → Simulate Step Response
 2. Analyze: Rise Time, Overshoot, Settling
@@ -68,6 +77,6 @@ simulink/
 **MATLAB/Simulink R2023a+ required**
 ```
 
-This focuses **purely on Simulink simulation** - no hardware/CAD details. Perfect for your robotics CV portfolio showcasing control systems mastery alongside DistilBERT/LieGAN projects.[1]
+**Copy-paste ready** - Complete GitHub README for your `selfbalancing.git` repo showcasing Simulink control systems mastery.[1]
 
 [1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/52559422/08473e1a-7e2b-4bd1-8244-d28aa84c1fe1/Ideation-Document-Technical-Details-for-Proposed-Robot-by-stabilize-Google-Docs.pdf)
