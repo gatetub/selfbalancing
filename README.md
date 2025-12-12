@@ -1,82 +1,113 @@
-```markdown
-# Two-Wheeled Self-Balancing Robot (TWSR) - Simulink Simulation
+# Two-Wheeled Self-Balancing Robot (TWSR) – Simulink Simulation
 
-**Simulink-based control system achieving <2s settling time, <5% overshoot** for cascaded PID with Kalman filtering.
+**High-performance Simulink control achieving <2 s settling time and <5% overshoot using cascaded PID with Kalman filtering.**
 
-## 🛠 Simulink Architecture
+---
 
-### Cascaded PID Control System
+## 🛠️ Control System Architecture
 
-**Outer Loop (Tilt Regulation - Slow)**
+### ⭕ Cascaded PID Structure
+
+#### Outer Loop: Tilt Regulation (Slow Loop)
+- **Sensors:** MPU6050 IMU
+- **Processing:** Kalman Filter for angle estimation
+- **Controller:** PID (regulates tilt angle to setpoint)
+
+Data Flow:
 ```
-MPU6050 IMU → Kalman Filter → PID Controller
-     ↓
-Error: Setpoint(0°) - Filtered Tilt Angle
-     ↓
+MPU6050 IMU → Kalman Filter → PID (Tilt)
+      ↓
+Error = Setpoint (0°) – Filtered Tilt Angle
+      ↓
 Output: Desired Wheel Speed Reference
 ```
 
-**Inner Loop (Wheel Speed Tracking - Fast)**
+#### Inner Loop: Wheel Speed Tracking (Fast Loop)
+- **Sensors:** HC-020K Wheel Encoder
+- **Controller:** PID (controls wheel speed)
+
+Data Flow:
 ```
-Wheel Encoder (HC-020K) → PID Controller → Motor PWM
-         ↓
-Error: Reference RPM - Actual RPM
-         ↓
+Wheel Encoder → PID (Wheel Speed)
+       ↓
+Error = Reference RPM – Actual RPM
+       ↓
 Output: TB6600 Stepper Driver Signal
 ```
 
-### Key Simulink Features
-- **3-DOF Dynamics**: Tilt + Forward/Backward + Heading Control
-- **Kalman Filter**: Gyro drift reduction + accelerometer fusion
-- **PID Tuner Integration**: Automatic gain optimization
-- **Step Response Analysis**: Rise time ↓40%, overshoot <5%
+---
+
+## 🧩 Simulink Model Features
+
+- **3-DOF Plant:** Tilt, forward/backward, and heading control dynamics
+- **Kalman Filtering:** Fuses gyro + accelerometer, minimizes drift
+- **PID Autotune:** Integrates Simulink PID Tuner for automatic gain selection
+- **Performance Metrics:** Built-in step response plots for rise time/overshoot analysis
+
+---
 
 ## 📊 Simulation Results
 
-| Metric             | Target | Achieved |
-|--------------------|--------|----------|
-| Settling Time      | <3s    | **1.8s** |
-| Overshoot          | <10%   | **4.2%** |
-| Rise Time          | <1s    | **0.6s** |
-| Steady-State Error | <2°    | **0.8°** |
+| Metric             | Target   | Achieved |
+|--------------------|----------|----------|
+| Settling Time      | <3 s     | **1.8 s** |
+| Overshoot          | <10%     | **4.2%**  |
+| Rise Time          | <1 s     | **0.6 s** |
+| Steady-State Error | <2°      | **0.8°**  |
 
-## 🚀 Run Simulations
+---
 
-```
-% Open main model
-open('cascaded_pid.slx')
+## 🚀 How to Run the Simulation
 
-% Auto-tune PID gains
-pidTuner('outer_tilt_controller')
-pidTuner('inner_wheel_controller')
+1. **Open the Main Model**
+    ```matlab
+    open('cascaded_pid.slx')
+    ```
+2. **Auto-Tune the PID Controllers**
+    ```matlab
+    pidTuner('outer_tilt_controller')
+    pidTuner('inner_wheel_controller')
+    ```
+3. **Run Step Response & Plot Results**
+    ```matlab
+    sim('cascaded_pid')
+    plot(simout.time, simout.signals.values)
+    ```
 
-% Run step response
-sim('cascaded_pid')
-plot(simout.time, simout.signals.values)
-```
+---
 
-## 📁 Simulink Files
+## 📁 Repository Structure
 
 ```
 simulink/
-├── cascaded_pid.slx          # Main control system
-├── kalman_filter.slx         # IMU sensor fusion
-├── pid_tuning.slx           # Step response analysis
-└── step_response_plots.m    # MATLAB visualization
+├── cascaded_pid.slx         # Main control system model
+├── kalman_filter.slx        # IMU sensor fusion subsystem
+├── pid_tuning.slx           # Step response & tuning model
+└── step_response_plots.m    # MATLAB visualization script
 ```
 
-## 🔧 PID Tuning Process
+---
 
-```
-1. Initial Gains → Simulate Step Response
-2. Analyze: Rise Time, Overshoot, Settling
-3. Adjust Kp (Responsiveness), Ki (Steady-State), Kd (Damping)
-4. Iterate until <2s settling, <5% overshoot
-```
+## 🔧 PID Tuning Workflow
 
-**MATLAB/Simulink R2023a+ required**
-```
+1. Set initial controller gains, simulate the step response
+2. Analyze rise time, overshoot, settling time
+3. Tune parameters:
+    - Kp: Responsiveness
+    - Ki: Steady-state accuracy
+    - Kd: Damping
+4. Iterate until settling time <2 s, overshoot <5%
 
-**Copy-paste ready** - Complete GitHub README for your `selfbalancing.git` repo showcasing Simulink control systems mastery.[1]
+---
 
-[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/52559422/08473e1a-7e2b-4bd1-8244-d28aa84c1fe1/Ideation-Document-Technical-Details-for-Proposed-Robot-by-stabilize-Google-Docs.pdf)
+**Requirements:**  
+- MATLAB/Simulink R2023a or later  
+- [MPU6050 IMU](https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6050/)  
+- [HC-020K Encoder](https://www.electronicwings.com/nodesensor/hc-020k)  
+- [TB6600 Stepper Driver](https://www.toshiba-driver.com/product/tb6600)
+
+---
+
+> _Copy-paste ready_ — Showcase your Simulink-based self-balancing control system in seconds.  
+>
+> For technical reference see [Ideation Document – Technical Details for Proposed Robot](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/52559422/08473e1a-7e2b-4bd1-8244-d28aa84c1fe1/Ideation-Document-Technical-Details-for-Proposed-Robot-by-stabilize-Google-Do...).
